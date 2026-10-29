@@ -1,0 +1,33 @@
+{
+  "name": "cse465-voting",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=24.15.0 <25" },
+  "workspaces": ["frontend"],
+  "scripts": {
+    "compile": "hardhat compile",
+    "typecheck": "npm run compile && tsc --noEmit",
+    "test": "hardhat test",
+    "test:production": "hardhat test --build-profile production",
+    "node": "hardhat node --network hardhatMainnet",
+    "deploy:local": "hardhat ignition deploy ignition/modules/Voting.ts --network localhost",
+    "deploy:sepolia": "hardhat ignition deploy ignition/modules/Voting.ts --network sepolia",
+    "verify:sepolia": "hardhat ignition verify chain-11155111",
+    "export:abi": "hardhat run scripts/export-abi.ts",
+    "predev": "npm run export:abi",
+    "dev": "npm run dev --workspace frontend",
+    "build": "npm run export:abi && npm run build --workspace frontend",
+    "lint": "npm run lint --workspace frontend",
+    "check": "npm run typecheck && npm test && npm run lint && npm run build"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-ignition": "^3.1.9",
+    "@nomicfoundation/hardhat-toolbox-viem": "^5.0.7",
+    "@types/node": "^22.20.5",
+    "forge-std": "github:foundry-rs/forge-std#v1.16.2",
+    "hardhat": "^3.21.1",
+    "typescript": "~6.0.3",
+    "viem": "^2.57.13"
+  }
+}
