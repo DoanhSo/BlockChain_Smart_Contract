@@ -32,7 +32,7 @@ try {
   for (let i = count; i < names.length; ++i) await mined(`addCandidate ${names[i]}`, await voting.write.addCandidate([names[i]]));
 
   const pending: Address[] = [];
-  for (const voter of config.voters.map(getAddress)) if (!await voting.read.isRegistered([voter])) pending.push(voter);
+  for (const voter of config.voters.map((voter: string) => getAddress(voter))) if (!await voting.read.isRegistered([voter])) pending.push(voter);
   if (pending.length) await mined(`registerVoters ${pending.length}`, await voting.write.registerVoters([pending]));
 
   console.log(JSON.stringify({ address: voting.address, candidateCount: String(await voting.read.candidateCount()),

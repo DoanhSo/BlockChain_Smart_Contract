@@ -8,7 +8,8 @@ Thư mục dự án: `C:\Users\mrdoanh\Downloads\BlockChain`.
 Hợp đồng `Voting` đã có quản lý ứng viên, đăng ký cử tri theo batch, mở phiếu có
 thời hạn, bỏ phiếu một lần mỗi ví và kết quả thắng/hòa/không phiếu; 51 test đạt
 trên mạng local. Frontend có màn hình quản trị, bỏ phiếu và kết quả nhưng **chưa
-được kiểm thử với ví thật**. **Chưa triển khai lên Sepolia.**
+được kiểm thử với ví thật**. Đã triển khai và verify trên Sepolia tại
+`0xfdDf72319CF2B1F63680c8cd3E678c4dA4fdf910` ([chi tiết](deployments/README.md)); chưa chạy phiên bỏ phiếu thật.
 
 ## Môi trường
 
@@ -66,6 +67,7 @@ hardhat.config.ts               Compiler, local, Sepolia và verify
 - `npm run seed:local`: thêm 3 ứng viên, 5 ví cử tri vào deployment local (không mở phiếu).
 - `npm run export:local` / `npm run export:sepolia`: ghi metadata deployment.
 - `npm run demo:local`: chạy demo đầy đủ trên mạng mô phỏng, ghi `docs/evidence/local-demo.json`.
+- `npm run setup:sepolia`: thêm ứng viên/cử tri theo `deployments/sepolia-election.json` (không mở phiếu).
 - `npm run smoke:sepolia`: đọc và đối chiếu deployment Sepolia (cần `SEPOLIA_RPC_URL`).
 - `npm run export:abi`: compile khi cần và cập nhật ABI cho frontend.
 - `npm run dev`: xuất ABI rồi chạy Vite.

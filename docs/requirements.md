@@ -23,9 +23,9 @@ Nguồn và thiết kế đầy đủ: [Kế hoạch Solidity](./KE-HOACH-DE-P-S
 - [x] Quản lý ứng viên và đăng ký cử tri, kèm test phân quyền.
 - [x] Mở phiếu, thời gian, chống bỏ trùng và kiểm thử biên.
 - [x] Kiểm phiếu và outcome, test hòa/không phiếu/bất biến.
-- [ ] Kết nối ví và tương tác hợp đồng trên frontend.
+- [x] Kết nối ví và tương tác hợp đồng trên frontend (thử local; MetaMask thật khi chạy Sepolia).
 - [ ] Triển khai, verify, thu minh chứng Sepolia.
 - [ ] Báo cáo và diễn tập bảo vệ.
 
 Ba mốc đầu đã có code và test local ([kết quả](./test-results.md)).
-Frontend chưa được thử với ví thật; chưa triển khai Sepolia.
+Đã triển khai và verify trên Sepolia (`deployments/README.md`); chưa chạy phiên bỏ phiếu thật.
