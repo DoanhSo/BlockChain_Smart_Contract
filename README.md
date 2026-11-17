@@ -129,7 +129,7 @@ Theo dõi đầu việc, thứ tự phụ thuộc và tiêu chí nghiệm thu tr
 1. ~~Ứng viên và cấp quyền cử tri, kiểm thử quyền admin.~~ (đã xong)
 2. ~~Vòng đời Setup/Voting/Ended, thời hạn và chống bỏ trùng.~~ (đã xong)
 3. ~~Kết quả thắng/hòa/không phiếu và các bất biến số đếm.~~ (đã xong)
-4. Kiểm thử frontend với ví MetaMask, sửa cảnh báo lint.
+4. Thử frontend với extension MetaMask thật (đã thử bằng ví thử nghiệm trên node local).
 5. Deploy Sepolia, minh chứng, báo cáo và bảo vệ.
 
 Đọc [yêu cầu](docs/requirements.md), [kế hoạch chi tiết](docs/KE-HOACH-DE-P-SOLIDITY.md)

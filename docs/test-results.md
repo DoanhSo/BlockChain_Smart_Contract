@@ -3,6 +3,7 @@
 Môi trường: Windows 11, Node.js 24.15.0, Solidity 0.8.34, Hardhat 3.
 Toàn bộ kết quả dưới đây chạy trên **mạng mô phỏng local (chain 31337)**,
 không phải Sepolia. Chưa triển khai Sepolia, chưa thử frontend với ví MetaMask.
+Giao diện đã được thử bằng ví thử nghiệm trên node local (mục bên dưới).
 
 ## Lệnh đã chạy
 
@@ -10,8 +11,30 @@ không phải Sepolia. Chưa triển khai Sepolia, chưa thử frontend với v�
 - `npm run test:production`: 51 test đạt với profile optimizer (runs 200).
 - `npm run typecheck`: đạt.
 - `npm run build`: đạt (có cảnh báo, xem bên dưới).
-- `npm run lint`: đạt với 3 cảnh báo React trong frontend, chưa sửa.
+- `npm run lint`: đạt, không còn cảnh báo.
 - `npm run demo:local`: đạt; ghi `docs/evidence/local-demo.json`.
+
+## Kiểm thử giao diện trên node local
+
+Chạy `npm run node`, `deploy:local`, `seed:local`, `export:local`, `npm run dev`.
+Trình duyệt dùng một ví thử nghiệm gắn vào `window.ethereum`, chuyển tiếp tới các
+tài khoản mở khóa của Hardhat node; **chưa thử bằng extension MetaMask thật**.
+
+- Admin: thêm ứng viên "  Dũng   Trần " được chuẩn hóa thành "Dũng Trần";
+  thêm trùng "An" bị chặn ở bước mô phỏng với thông báo "Tên ứng viên đã tồn tại."
+  (không gửi giao dịch); đăng ký thêm 1 ví; mở phiếu 2 phút; bảng quản trị ẩn sau khi mở.
+- Cử tri: 3 ví bỏ phiếu (An, An, Dũng Trần), mỗi giao dịch hiện hash và
+  "Giao dịch thành công trong block"; ví đã bỏ phiếu và ví chưa được cấp quyền
+  không chọn được ứng viên; ví hợp lệ chưa bỏ phiếu thì chọn được.
+- Kết quả: sau hạn và có block mới, hiển thị "Kết quả cuối cùng — Người thắng: An";
+  tải lại trang vẫn đọc đúng kết quả từ chain. Không có lỗi console.
+  Bề rộng 375 px không bị cuộn ngang.
+
+Lỗi tìm thấy và đã sửa: bộ đếm ngược tính theo timestamp block mới nhất nên bị
+đứng khi không có block mới (node local chỉ đào block khi có giao dịch) và sai
+lệch tối đa một block trên Sepolia. Nay đếm theo đồng hồ máy; trạng thái bỏ phiếu
+vẫn lấy từ `phase()` trên chain. Trên node local, `phase()` chỉ chuyển sang
+"Đã kết thúc" khi có block mới sau hạn (giao dịch bất kỳ hoặc `evm_mine`).
 
 ## Phạm vi test
 
@@ -50,8 +73,6 @@ Chi phí trên Sepolia phụ thuộc giá gas lúc gửi; đo lại khi triển 
 
 ## Cảnh báo còn tồn tại
 
-- Lint frontend: `useWallet.ts` gọi setState đồng bộ trong effect và đọc
-  `ref.current` trong cleanup; `App.tsx` gọi `Date.now()` khi render.
 - Build Vite: bundle khoảng 517 kB (vượt ngưỡng cảnh báo 500 kB); cảnh báo
   externalize `node:worker_threads` từ `ox/tempo` (dự án không dùng Tempo).
 - `npm audit` (ghi nhận từ lúc tạo khung, chưa kiểm tra lại): các mục high liên

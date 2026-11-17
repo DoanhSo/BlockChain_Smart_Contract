@@ -26,7 +26,8 @@ export function useWallet() {
   }, [provider])
 
   useEffect(() => {
-    alive.current = true
+    const liveness = alive; const generations = generation
+    liveness.current = true
     const discover = () => setProvider(window.ethereum)
     window.addEventListener('ethereum#initialized', discover)
     const changed = () => {
@@ -38,9 +39,11 @@ export function useWallet() {
     provider?.on('accountsChanged', changed)
     provider?.on('chainChanged', changed)
     provider?.on('disconnect', disconnected)
+    // synchronize() only sets state after awaiting the wallet provider, never synchronously.
+    // oxlint-disable-next-line react/set-state-in-effect
     void synchronize()
     return () => {
-      alive.current = false; ++generation.current
+      liveness.current = false; ++generations.current
       window.removeEventListener('ethereum#initialized', discover)
       provider?.removeListener('accountsChanged', changed)
       provider?.removeListener('chainChanged', changed)

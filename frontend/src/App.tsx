@@ -17,11 +17,12 @@ export default function App() {
   const wallet = useWallet()
   const election = useElection(wallet.account)
   const tx = useTransaction(election.refresh)
-  const [now, setNow] = useState(Date.now())
+  const [now, setNow] = useState(() => Date.now())
   useEffect(() => { const timer = setInterval(() => setNow(Date.now()), 1_000); return () => clearInterval(timer) }, [])
   const data = election.data
   const stale = !data || now - data.fetchedAt > 20_000
-  const remaining = data?.phase === 1 ? Math.max(0, Math.ceil(Number(data.endTime - data.timestamp) - (now - data.fetchedAt) / 1000)) : 0
+  // Display only: phase() read from the chain stays the authority on whether voting is open.
+  const remaining = data?.phase === 1 ? Math.max(0, Number(data.endTime) - Math.floor(now / 1000)) : 0
   const blocked = tx.busy || stale || wallet.wrongNetwork || !wallet.account
   const admin = data && wallet.account?.toLowerCase() === data.admin.toLowerCase()
   const explorer = chain.blockExplorers?.default.url

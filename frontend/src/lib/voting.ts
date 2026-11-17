@@ -7,7 +7,7 @@ export interface Election {
   title: string; admin: Address; phase: number; started: boolean
   startTime: bigint; endTime: bigint; total: bigint; registeredCount: bigint
   candidates: { id: bigint; name: string; votes: bigint }[]
-  eligible: boolean; voted: boolean; block: bigint; timestamp: bigint
+  eligible: boolean; voted: boolean; block: bigint
   outcome?: { kind: number; ids: readonly bigint[]; highest: bigint }
   fetchedAt: number
 }
@@ -39,7 +39,7 @@ export async function loadElection(rpc: VotingClient, address: Address, account?
   }))
   const result = phase === 2 ? await rpc.readContract({ ...base, functionName: 'getOutcome' }) : undefined
   return { title, admin, phase, started, startTime, endTime, total, registeredCount, candidates, eligible, voted,
-    block: block.number, timestamp: block.timestamp, fetchedAt: Date.now(),
+    block: block.number, fetchedAt: Date.now(),
     outcome: result ? { kind: result[0], ids: result[1], highest: result[2] } : undefined }
 }
 
