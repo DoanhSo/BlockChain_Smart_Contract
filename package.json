@@ -16,6 +16,7 @@
     "export:local": "hardhat run scripts/export-deployment.ts --network localhost",
     "export:sepolia": "hardhat run scripts/export-deployment.ts --network sepolia",
     "demo:local": "hardhat run scripts/demo-local.ts --network hardhatMainnet --build-profile production",
+    "setup:sepolia": "hardhat run scripts/setup-sepolia.ts --network sepolia",
     "smoke:sepolia": "node --env-file-if-exists=.env scripts/smoke-sepolia.ts",
     "deploy:sepolia": "hardhat ignition deploy ignition/modules/Voting.ts --network sepolia --parameters ignition/parameters/sepolia.json --build-profile production",
     "verify:sepolia": "hardhat ignition verify chain-11155111 --network sepolia",
