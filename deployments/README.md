@@ -1,7 +1,19 @@
 # Thông tin triển khai
 
-Chưa có địa chỉ triển khai chính thức. Không tạo địa chỉ giả trong cấu hình.
+## Ethereum Sepolia (chain ID 11155111)
 
-Hardhat Ignition lưu kết quả thật tại `ignition/deployments/chain-<chainId>/`.
-Khi nộp bài, ghi lại địa chỉ, transaction hash, block, constructor arguments,
-compiler/settings và commit mã nguồn. Chỉ công bố metadata, không lưu secret.
+- Hợp đồng `Voting`: `0x3Ae7852FE632DFc7e35D1aA3Df55e10c61931EE7`
+- Tiêu đề (constructor): "Bầu lớp trưởng 65CNTT"
+- Admin: `0x15c94F15cd2fa70027E1adEB1bAEB0AFcb177678`
+- Giao dịch deploy: `0x8fc75557f746474a964355772d7c699ca87c775572c3423f30fd22f52a522ef9`
+- Compiler 0.8.34, profile production (optimizer bật, runs 200).
+- Source đã verify trên
+  [Etherscan](https://sepolia.etherscan.io/address/0x3Ae7852FE632DFc7e35D1aA3Df55e10c61931EE7#code),
+  [Blockscout](https://eth-sepolia.blockscout.com/address/0x3Ae7852FE632DFc7e35D1aA3Df55e10c61931EE7#code)
+  và Sourcify.
+- Metadata đọc lại: `deployments/sepolia.json`; nhật ký Ignition:
+  `ignition/deployments/chain-11155111/journal.jsonl`.
+
+Trạng thái lúc ghi: Setup, chưa có ứng viên/cử tri, chưa mở phiếu.
+
+Chỉ công bố metadata, không lưu secret. Deployment local (31337) không được commit.
