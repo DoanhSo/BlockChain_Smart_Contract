@@ -1,0 +1,193 @@
+{
+  "source": "Hardhat isolated local simulation, not Sepolia",
+  "measuredAt": "2026-11-17T10:11:58.297Z",
+  "compiler": "0.8.34",
+  "profile": "production (run via npm run demo:local)",
+  "records": [
+    {
+      "label": "winner",
+      "address": "0x5fbdb2315678afecb367f032d93f642f64180aa3",
+      "outcome": [
+        1,
+        [
+          "0"
+        ],
+        "3"
+      ],
+      "results": [
+        [
+          "3",
+          "1",
+          "1"
+        ],
+        "5"
+      ],
+      "deploymentTx": "0xde3243f3d67c89683f86676a315d97e268a56d8cdbc8ff85c8a0184ff88d1054"
+    },
+    {
+      "label": "tie",
+      "address": "0x0165878a594ca255338adfa4d48449f69242eb8f",
+      "outcome": [
+        2,
+        [
+          "0",
+          "1"
+        ],
+        "2"
+      ],
+      "results": [
+        [
+          "2",
+          "2",
+          "1"
+        ],
+        "5"
+      ],
+      "deploymentTx": "0x58991993eea74e7c6f25bcc54ae83d27b6c9082d2e427f71ed596757810c771e"
+    },
+    {
+      "label": "no-votes",
+      "address": "0xa51c1fc2f0d1a1b8494ed1fe312d7c3a78ed91c0",
+      "outcome": [
+        0,
+        [],
+        "0"
+      ],
+      "results": [
+        [
+          "0",
+          "0",
+          "0"
+        ],
+        "0"
+      ],
+      "deploymentTx": "0x9da3eae1de8b94aa241bca6bdbcd7abc6cf4b08819bb23c9a0599a151c1dace7"
+    }
+  ],
+  "gas": [
+    {
+      "operation": "deploy:winner",
+      "gasUsed": "1052389"
+    },
+    {
+      "operation": "candidate:winner",
+      "gasUsed": "96159"
+    },
+    {
+      "operation": "candidate:winner",
+      "gasUsed": "79095"
+    },
+    {
+      "operation": "candidate:winner",
+      "gasUsed": "79071"
+    },
+    {
+      "operation": "register-5:winner",
+      "gasUsed": "167265"
+    },
+    {
+      "operation": "start:winner",
+      "gasUsed": "93806"
+    },
+    {
+      "operation": "vote-0:winner",
+      "gasUsed": "98600"
+    },
+    {
+      "operation": "vote-1:winner",
+      "gasUsed": "64400"
+    },
+    {
+      "operation": "vote-2:winner",
+      "gasUsed": "64400"
+    },
+    {
+      "operation": "vote-3:winner",
+      "gasUsed": "81512"
+    },
+    {
+      "operation": "vote-4:winner",
+      "gasUsed": "81512"
+    },
+    {
+      "operation": "deploy:tie",
+      "gasUsed": "1052353"
+    },
+    {
+      "operation": "candidate:tie",
+      "gasUsed": "96159"
+    },
+    {
+      "operation": "candidate:tie",
+      "gasUsed": "79095"
+    },
+    {
+      "operation": "candidate:tie",
+      "gasUsed": "79071"
+    },
+    {
+      "operation": "register-5:tie",
+      "gasUsed": "167265"
+    },
+    {
+      "operation": "start:tie",
+      "gasUsed": "93806"
+    },
+    {
+      "operation": "vote-0:tie",
+      "gasUsed": "98600"
+    },
+    {
+      "operation": "vote-1:tie",
+      "gasUsed": "81512"
+    },
+    {
+      "operation": "vote-2:tie",
+      "gasUsed": "64400"
+    },
+    {
+      "operation": "vote-3:tie",
+      "gasUsed": "64412"
+    },
+    {
+      "operation": "vote-4:tie",
+      "gasUsed": "81512"
+    },
+    {
+      "operation": "deploy:no-votes",
+      "gasUsed": "1052413"
+    },
+    {
+      "operation": "candidate:no-votes",
+      "gasUsed": "96159"
+    },
+    {
+      "operation": "candidate:no-votes",
+      "gasUsed": "79095"
+    },
+    {
+      "operation": "candidate:no-votes",
+      "gasUsed": "79071"
+    },
+    {
+      "operation": "register-5:no-votes",
+      "gasUsed": "167265"
+    },
+    {
+      "operation": "start:no-votes",
+      "gasUsed": "93806"
+    },
+    {
+      "operation": "register-1",
+      "gasUsed": "70249"
+    },
+    {
+      "operation": "register-10",
+      "gasUsed": "285997"
+    },
+    {
+      "operation": "register-50",
+      "gasUsed": "1244877"
+    }
+  ]
+}

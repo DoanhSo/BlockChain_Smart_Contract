@@ -8,6 +8,7 @@
     "types": ["node"],
     "verbatimModuleSyntax": true,
     "strict": true,
+    "allowImportingTsExtensions": true,
     "noEmit": true
   },
   "include": ["hardhat.config.ts", "ignition/modules/**/*.ts", "scripts/**/*.ts", "test/**/*.ts", "artifacts/**/*.d.ts"],

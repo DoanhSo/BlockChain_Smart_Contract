@@ -1,0 +1,49 @@
+{
+  "_format": "hh3-sol-build-info-1",
+  "id": "solc-0_8_34-ae649456108618df4ebdf231e3b54eeab5c5265b",
+  "solcVersion": "0.8.34",
+  "solcLongVersion": "0.8.34+commit.80d5c536",
+  "compilerType": "solc",
+  "toolVersions": {
+    "hardhat": "3.21.1"
+  },
+  "userSourceNameMap": {
+    "contracts/Voting.sol": "project/contracts/Voting.sol"
+  },
+  "input": {
+    "language": "Solidity",
+    "settings": {
+      "evmVersion": "osaka",
+      "optimizer": {
+        "enabled": true,
+        "runs": 200
+      },
+      "outputSelection": {
+        "*": {
+          "": [
+            "ast"
+          ],
+          "*": [
+            "abi",
+            "evm.bytecode.linkReferences",
+            "evm.bytecode.object",
+            "evm.bytecode.opcodes",
+            "evm.bytecode.sourceMap",
+            "evm.deployedBytecode.immutableReferences",
+            "evm.deployedBytecode.linkReferences",
+            "evm.deployedBytecode.object",
+            "evm.deployedBytecode.opcodes",
+            "evm.deployedBytecode.sourceMap",
+            "evm.methodIdentifiers"
+          ]
+        }
+      },
+      "remappings": []
+    },
+    "sources": {
+      "project/contracts/Voting.sol": {
+        "content": "// SPDX-License-Identifier: UNLICENSED\npragma solidity 0.8.34;\n\n/// @title Public, allowlisted, one-address-one-vote election for CSE465\n/// @notice One deployment is one election. Wallet eligibility is assigned off-chain.\ncontract Voting {\n    uint256 public constant MAX_TITLE_BYTES = 160;\n    uint256 public constant MAX_NAME_BYTES = 96;\n    uint256 public constant MAX_CANDIDATES = 20;\n    uint256 public constant MAX_BATCH_SIZE = 100;\n    uint256 public constant MIN_DURATION = 60;\n    uint256 public constant MAX_DURATION = 30 days;\n\n    enum Phase { Setup, Voting, Ended }\n    enum Outcome { NoVotes, Winner, Tie }\n    struct Candidate {\n        string name;\n        uint256 voteCount;\n    }\n\n    address public immutable admin;\n    string public electionTitle;\n    Candidate[] private candidates;\n    mapping(bytes32 => bool) private candidateNameUsed;\n    mapping(address => bool) public isRegistered;\n    mapping(address => bool) public hasVoted;\n    uint256 public registeredVoterCount;\n    uint256 public totalVotes;\n    bool public started;\n    uint256 public startTime;\n    uint256 public endTime;\n\n    error InvalidTitle();\n    error Unauthorized();\n    error InvalidPhase();\n    error InvalidCandidateName();\n    error DuplicateCandidate();\n    error CandidateLimitReached();\n    error InvalidVoter();\n    error AlreadyRegistered();\n    error InvalidBatchSize();\n    error InsufficientCandidates();\n    error NoRegisteredVoters();\n    error InvalidDuration();\n    error NotRegistered();\n    error AlreadyVoted();\n    error InvalidCandidate();\n    error ResultsNotFinal();\n\n    event CandidateAdded(uint256 indexed candidateId, string name);\n    event VoterRegistered(address indexed voter);\n    event VotingStarted(uint256 startTime, uint256 endTime);\n    event VoteCast(address indexed voter, uint256 indexed candidateId);\n\n    modifier onlyAdmin() {\n        if (msg.sender != admin) revert Unauthorized();\n        _;\n    }\n\n    modifier onlySetup() {\n        if (started) revert InvalidPhase();\n        _;\n    }\n\n    constructor(string memory title) {\n        uint256 length = bytes(title).length;\n        if (length == 0 || length > MAX_TITLE_BYTES) revert InvalidTitle();\n\n        admin = msg.sender;\n        electionTitle = title;\n    }\n\n    /// @dev Derived from chain time; expiry needs neither an admin nor a transaction.\n    function phase() public view returns (Phase) {\n        if (!started) return Phase.Setup;\n        return block.timestamp < endTime ? Phase.Voting : Phase.Ended;\n    }\n\n    function addCandidate(string calldata name) external onlyAdmin onlySetup {\n        if (candidates.length >= MAX_CANDIDATES) revert CandidateLimitReached();\n        uint256 length = bytes(name).length;\n        if (length == 0 || length > MAX_NAME_BYTES) revert InvalidCandidateName();\n        bytes32 key = keccak256(bytes(name));\n        if (candidateNameUsed[key]) revert DuplicateCandidate();\n        candidateNameUsed[key] = true;\n        uint256 id = candidates.length;\n        candidates.push(Candidate(name, 0));\n        emit CandidateAdded(id, name);\n    }\n\n    /// @notice An invalid or duplicate entry reverts the entire batch.\n    function registerVoters(address[] calldata voters) external onlyAdmin onlySetup {\n        if (voters.length == 0 || voters.length > MAX_BATCH_SIZE) revert InvalidBatchSize();\n        for (uint256 i; i < voters.length; ++i) {\n            address voter = voters[i];\n            if (voter == address(0)) revert InvalidVoter();\n            if (isRegistered[voter]) revert AlreadyRegistered();\n            isRegistered[voter] = true;\n            emit VoterRegistered(voter);\n        }\n        registeredVoterCount += voters.length;\n    }\n\n    function startVoting(uint256 durationSeconds) external onlyAdmin onlySetup {\n        if (candidates.length < 2) revert InsufficientCandidates();\n        if (registeredVoterCount == 0) revert NoRegisteredVoters();\n        if (durationSeconds < MIN_DURATION || durationSeconds > MAX_DURATION) revert InvalidDuration();\n        started = true;\n        startTime = block.timestamp;\n        endTime = block.timestamp + durationSeconds;\n        emit VotingStarted(startTime, endTime);\n    }\n\n    /// @notice Public and nonpayable; the sender pays network gas, not a contract fee.\n    function vote(uint256 candidateId) external {\n        if (phase() != Phase.Voting) revert InvalidPhase();\n        if (!isRegistered[msg.sender]) revert NotRegistered();\n        if (hasVoted[msg.sender]) revert AlreadyVoted();\n        if (candidateId >= candidates.length) revert InvalidCandidate();\n        hasVoted[msg.sender] = true;\n        candidates[candidateId].voteCount += 1;\n        totalVotes += 1;\n        emit VoteCast(msg.sender, candidateId);\n    }\n\n    function candidateCount() external view returns (uint256) {\n        return candidates.length;\n    }\n\n    function getCandidate(uint256 candidateId) external view returns (string memory name, uint256 voteCount) {\n        if (candidateId >= candidates.length) revert InvalidCandidate();\n        Candidate storage candidate = candidates[candidateId];\n        return (candidate.name, candidate.voteCount);\n    }\n\n    /// @notice During Voting these are provisional, publicly observable totals.\n    function getResults() external view returns (uint256[] memory voteCounts, uint256 total) {\n        voteCounts = new uint256[](candidates.length);\n        for (uint256 i; i < candidates.length; ++i) voteCounts[i] = candidates[i].voteCount;\n        total = totalVotes;\n    }\n\n    function getOutcome() external view returns (Outcome outcome, uint256[] memory winnerIds, uint256 highestVotes) {\n        if (phase() != Phase.Ended) revert ResultsNotFinal();\n        if (totalVotes == 0) return (Outcome.NoVotes, new uint256[](0), 0);\n        uint256 winnerCount;\n        for (uint256 i; i < candidates.length; ++i) {\n            uint256 count = candidates[i].voteCount;\n            if (count > highestVotes) {\n                highestVotes = count;\n                winnerCount = 1;\n            } else if (count == highestVotes) {\n                winnerCount += 1;\n            }\n        }\n        winnerIds = new uint256[](winnerCount);\n        uint256 next;\n        for (uint256 i; i < candidates.length; ++i) {\n            if (candidates[i].voteCount == highestVotes) winnerIds[next++] = i;\n        }\n        outcome = winnerCount == 1 ? Outcome.Winner : Outcome.Tie;\n    }\n}\n"
+      }
+    }
+  }
+}

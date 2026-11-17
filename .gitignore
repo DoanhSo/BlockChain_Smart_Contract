@@ -36,3 +36,6 @@ dist/
 *.tsbuildinfo
 .DS_Store
 .vscode/
+/deployments/local.json
+/ignition/deployments/chain-31337/
+/.claude/launch.json

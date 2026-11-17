@@ -20,11 +20,12 @@ Nguồn và thiết kế đầy đủ: [Kế hoạch Solidity](./KE-HOACH-DE-P-S
 
 ## Mốc triển khai tiếp theo
 
-- [ ] Quản lý ứng viên và đăng ký cử tri, kèm test phân quyền.
-- [ ] Mở phiếu, thời gian, chống bỏ trùng và kiểm thử biên.
-- [ ] Kiểm phiếu và outcome, test hòa/không phiếu/bất biến.
-- [ ] Kết nối ví và tương tác hợp đồng trên frontend.
+- [x] Quản lý ứng viên và đăng ký cử tri, kèm test phân quyền.
+- [x] Mở phiếu, thời gian, chống bỏ trùng và kiểm thử biên.
+- [x] Kiểm phiếu và outcome, test hòa/không phiếu/bất biến.
+- [x] Kết nối ví và tương tác hợp đồng trên frontend (thử local; MetaMask thật khi chạy Sepolia).
 - [ ] Triển khai, verify, thu minh chứng Sepolia.
 - [ ] Báo cáo và diễn tập bảo vệ.
 
-Bộ khung khởi tạo chưa đáp ứng các mốc nghiệp vụ này.
+Ba mốc đầu đã có code và test local ([kết quả](./test-results.md)).
+Đã triển khai và verify trên Sepolia (`deployments/README.md`); chưa chạy phiên bỏ phiếu thật.

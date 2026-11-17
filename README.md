@@ -5,11 +5,11 @@ Thư mục dự án: `C:\Users\mrdoanh\Downloads\BlockChain`.
 
 ## Trạng thái
 
-Đã dựng môi trường compile/test, hợp đồng khởi tạo `Voting`, module Ignition,
-script xuất ABI và frontend có thể đọc tên cuộc bầu chọn/admin từ hợp đồng đã cấu hình.
-Hợp đồng hiện **chỉ khởi tạo admin và tiêu đề**, kiểm tra độ dài tiêu đề 1–160 byte.
-Chưa có chức năng ứng viên, cấp quyền cử tri, bỏ phiếu, kiểm phiếu hay kết nối ví.
-Chưa triển khai lên Sepolia. Không dùng bộ khung này như hệ thống bỏ phiếu hoàn chỉnh.
+Hợp đồng `Voting` đã có quản lý ứng viên, đăng ký cử tri theo batch, mở phiếu có
+thời hạn, bỏ phiếu một lần mỗi ví và kết quả thắng/hòa/không phiếu; 51 test đạt
+trên mạng local. Frontend có màn hình quản trị, bỏ phiếu và kết quả nhưng **chưa
+được kiểm thử với ví thật**. Đã triển khai và verify trên Sepolia tại
+`0xfdDf72319CF2B1F63680c8cd3E678c4dA4fdf910` ([chi tiết](deployments/README.md)); chưa chạy phiên bỏ phiếu thật.
 
 ## Môi trường
 
@@ -34,11 +34,17 @@ Nếu checkout mới chưa có `node_modules`, dùng `npm ci` ở gốc; không 
 ## Cấu trúc
 
 ```text
-contracts/Voting.sol             Hợp đồng khởi tạo
+contracts/Voting.sol             Hợp đồng bầu chọn
 test/Voting.t.sol                Unit test Solidity cho constructor
+test/VotingSetup.t.sol           Unit test ứng viên, cử tri, mở phiếu
+test/VotingBallot.t.sol          Unit test bỏ phiếu, thời hạn, kết quả, fuzz
 test/Voting.ts                   Integration test deployment module + viem
 ignition/modules/Voting.ts       Deployment module có tham số title
 scripts/export-abi.ts            Xuất ABI từ artifact đã compile
+scripts/demo-local.ts            Demo local thắng/hòa/không phiếu và đo gas
+scripts/seed-election.ts         Thêm dữ liệu thử vào deployment local
+scripts/export-deployment.ts     Ghi metadata deployment cho frontend
+scripts/smoke-sepolia.ts         Kiểm tra chỉ đọc deployment Sepolia
 frontend/src/components/         Thành phần giao diện
 frontend/src/lib/blockchain.ts   Cấu hình RPC, mạng và địa chỉ hợp đồng
 frontend/src/generated/voting.ts ABI được sinh tự động
@@ -58,6 +64,11 @@ hardhat.config.ts               Compiler, local, Sepolia và verify
 - `npm run check`: typecheck, test, lint và build.
 - `npm run node`: khởi động Hardhat local tại 127.0.0.1:8545, chain ID 31337.
 - `npm run deploy:local`: triển khai lên node local đang chạy.
+- `npm run seed:local`: thêm 3 ứng viên, 5 ví cử tri vào deployment local (không mở phiếu).
+- `npm run export:local` / `npm run export:sepolia`: ghi metadata deployment.
+- `npm run demo:local`: chạy demo đầy đủ trên mạng mô phỏng, ghi `docs/evidence/local-demo.json`.
+- `npm run setup:sepolia`: thêm ứng viên/cử tri theo `deployments/sepolia-election.json` (không mở phiếu).
+- `npm run smoke:sepolia`: đọc và đối chiếu deployment Sepolia (cần `SEPOLIA_RPC_URL`).
 - `npm run export:abi`: compile khi cần và cập nhật ABI cho frontend.
 - `npm run dev`: xuất ABI rồi chạy Vite.
 
@@ -114,18 +125,20 @@ Sau khi sửa biến frontend, khởi động lại dev server hoặc build lạ
 
 ## Công việc tiếp theo
 
-1. Ứng viên và cấp quyền cử tri, kiểm thử quyền admin.
-2. Vòng đời Setup/Voting/Ended, thời hạn và chống bỏ trùng.
-3. Kết quả thắng/hòa/không phiếu và các bất biến số đếm.
-4. Kết nối ví, frontend bỏ phiếu, xử lý receipt và lỗi.
+Theo dõi đầu việc, thứ tự phụ thuộc và tiêu chí nghiệm thu trong
+[kế hoạch thực hiện M1–M6](docs/IMPLEMENTATION-PLAN.md).
+
+1. ~~Ứng viên và cấp quyền cử tri, kiểm thử quyền admin.~~ (đã xong)
+2. ~~Vòng đời Setup/Voting/Ended, thời hạn và chống bỏ trùng.~~ (đã xong)
+3. ~~Kết quả thắng/hòa/không phiếu và các bất biến số đếm.~~ (đã xong)
+4. Thử frontend với extension MetaMask thật (đã thử bằng ví thử nghiệm trên node local).
 5. Deploy Sepolia, minh chứng, báo cáo và bảo vệ.
 
 Đọc [yêu cầu](docs/requirements.md), [kế hoạch chi tiết](docs/KE-HOACH-DE-P-SOLIDITY.md)
-và [kịch bản demo](docs/demo-script.md). Không suy ra test nghiệp vụ đã đạt từ các
-test constructor đang có.
+và [kịch bản demo](docs/demo-script.md).
 
-## Kết quả kiểm tra bộ khung
+## Kết quả kiểm tra
 
-`npm run check` và `npm run test:production` đã đạt với 5 test.
-Các cảnh báo dependency/build còn tồn tại được ghi trong
-[kết quả kiểm tra](docs/test-results.md); chưa có kết quả kiểm thử nghiệp vụ bỏ phiếu.
+Ngày 17/11/2026: `npm test` và `npm run test:production` đạt 51 test,
+`npm run demo:local` đạt. Chi tiết, số đo gas và cảnh báo còn tồn tại trong
+[kết quả kiểm tra](docs/test-results.md). Tất cả là kết quả local, chưa có Sepolia.

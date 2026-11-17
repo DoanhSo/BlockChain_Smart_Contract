@@ -1,0 +1,13 @@
+{
+  "chainId": 11155111,
+  "address": "0xfdDf72319CF2B1F63680c8cd3E678c4dA4fdf910",
+  "contract": "Voting",
+  "compiler": "0.8.34",
+  "buildProfile": "production",
+  "title": "Bầu lớp trưởng 65CNTT",
+  "admin": "0x15c94F15cd2fa70027E1adEB1bAEB0AFcb177678",
+  "observedAtBlock": "12154207",
+  "sourceCommit": "2b16fe6e454b3c28b311dac36c8d38fd2a02b98f",
+  "sourceDirty": true,
+  "ignitionJournal": "ignition/deployments/chain-11155111/journal.jsonl"
+}
